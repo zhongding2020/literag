@@ -1,0 +1,48 @@
+{
+  "schemas": [
+    {
+      "name": "User",
+      "table": "users",
+      "fields": [
+        {"name": "id", "type": "UUID", "primary": true},
+        {"name": "email", "type": "VARCHAR(255)", "unique": true},
+        {"name": "display_name", "type": "VARCHAR(100)"},
+        {"name": "role", "type": "ENUM('admin','editor','viewer')", "default": "viewer"},
+        {"name": "created_at", "type": "TIMESTAMP", "default": "NOW()"},
+        {"name": "updated_at", "type": "TIMESTAMP", "default": "NOW()"}
+      ],
+      "indexes": ["email", "role"],
+      "description": "Core user account information"
+    },
+    {
+      "name": "Document",
+      "table": "documents",
+      "fields": [
+        {"name": "id", "type": "UUID", "primary": true},
+        {"name": "title", "type": "VARCHAR(500)"},
+        {"name": "content", "type": "TEXT"},
+        {"name": "author_id", "type": "UUID", "ref": "users.id"},
+        {"name": "status", "type": "ENUM('draft','published','archived')"},
+        {"name": "tags", "type": "JSONB"},
+        {"name": "created_at", "type": "TIMESTAMP", "default": "NOW()"}
+      ],
+      "indexes": ["author_id", "status", "tags"],
+      "description": "Content documents with full-text search support"
+    },
+    {
+      "name": "AuditLog",
+      "table": "audit_logs",
+      "fields": [
+        {"name": "id", "type": "BIGSERIAL", "primary": true},
+        {"name": "user_id", "type": "UUID", "ref": "users.id"},
+        {"name": "action", "type": "VARCHAR(50)"},
+        {"name": "resource_type", "type": "VARCHAR(50)"},
+        {"name": "resource_id", "type": "VARCHAR(100)"},
+        {"name": "details", "type": "JSONB"},
+        {"name": "ip_address", "type": "INET"},
+        {"name": "created_at", "type": "TIMESTAMP", "default": "NOW()"}
+      ],
+      "description": "Immutable audit trail for compliance"
+    }
+  ]
+}

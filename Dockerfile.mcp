@@ -1,0 +1,16 @@
+ # LiteRAG MCP Server
+ # 将 LightRAG REST API 包装为 MCP Tool 供 Claude Code 调用
+
+ FROM python:3.12-slim-bookworm
+
+ WORKDIR /app
+
+COPY mcp_server/requirements.txt .
+ RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+
+ COPY mcp_server/ .
+
+ EXPOSE 7463
+
+ENTRYPOINT ["python", "server.py"]
+ CMD ["--transport", "sse", "--host", "0.0.0.0", "--port", "7463"]

@@ -1,0 +1,23 @@
+ # 企业知识库（LiteRAG Knowledge Base）
+ 
+ ## 可用的 MCP Tools
+ 本项目配置了知识图谱系统，通过以下 MCP Tool 访问企业知识资产。
+ 当前知识库已有 6 份文档，覆盖 API 设计、部署运维、数据模型、工艺参数优化等领域。
+ 
+ ## 使用策略
+ 
+ 1. 当用户询问与技术文档、项目知识、业务逻辑、架构设计等相关的问题时，**优先调用 knowledge_query** 查询知识库再回答，而不是仅凭训练知识回答。
+ 2. 对于需要多角度分析的问题，使用 `mode: "mix"`（全模式融合）获取最全面的检索结果。
+ 3. 当用户提到"文档"、"资料"、"之前写的"、"某个文件"等时，先调用 knowledge_search_entities 搜索知识库中的相关实体，再结合 knowledge_query 获取完整上下文。
+ 4. 如果用户询问不熟悉的历史或背景信息，默认认为知识库中可能存在相关文档，先查询再回答。
+ 5. 处理代码或配置相关问题时，先查知识库确认是否有相关的设计文档、数据模型或部署规范。
+ 6. 在回答中引用知识库来源（文档名 / 实体关系），让用户知道信息来自企业内部知识库。
+ 
+ ## Tool 使用建议
+ - 需要快速概要了解时：knowledge_query(mode="hybrid")
+ - 需要深度推理或汇总多文档时：knowledge_query(mode="global")
+ - 需要精确事实定位时：knowledge_query(mode="local")
+ - 需要全面检索（默认推荐）：knowledge_query(mode="mix")
+ - 需要验证信息来源或获取原始上下文：knowledge_get_context(query, top_k=5)
+ - 用户上传新文件时：knowledge_insert(file_path)
+ - 需要了解当前知识库覆盖范围：knowledge_list_documents()

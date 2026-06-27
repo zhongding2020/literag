@@ -1,0 +1,50 @@
+INFRASTRUCTURE DEPLOYMENT GUIDE
+===============================
+
+Environment Configuration
+------------------------
+Production environment requires:
+- Kubernetes cluster v1.28+
+- PostgreSQL 15 with pgvector extension
+- Redis 7 for caching
+- MinIO for object storage
+
+Deployment Steps
+----------------
+1. Configure kubernetes context
+   kubectl config use-context production
+
+2. Apply infrastructure components
+   kubectl apply -f k8s/postgres/
+   kubectl apply -f k8s/redis/
+   kubectl apply -f k8s/minio/
+
+3. Deploy application
+   kubectl apply -f k8s/app/
+
+4. Verify health
+   curl https://api.example.com/health
+
+Rollback Strategy
+-----------------
+In case of failed deployment:
+1. kubectl rollout undo deployment/app
+2. Verify previous version health
+3. Investigate deployment logs
+
+Monitoring
+----------
+- Prometheus metrics at /metrics
+- Grafana dashboards for CPU, Memory, Request Latency
+- PagerDuty alerts for critical incidents
+
+Database Migrations
+-------------------
+All migrations are managed through Alembic:
+  alembic upgrade head
+
+Backup Strategy
+---------------
+- Full backup: Daily at 02:00 AM
+- WAL archiving: Continuous
+- Retention: 30 days for full backups, 7 days for WAL

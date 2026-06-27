@@ -1,0 +1,54 @@
+# Application Configuration Template
+application:
+  name: knowledge-platform
+  version: 2.1.0
+  environment: production
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  workers: 4
+  timeout: 30
+  cors:
+    enabled: true
+    allowed_origins:
+      - https://app.example.com
+      - https://admin.example.com
+
+database:
+  host: postgres.example.com
+  port: 5432
+  name: knowledge_db
+  pool_size: 20
+  max_overflow: 10
+  ssl: true
+
+cache:
+  type: redis
+  host: redis.example.com
+  port: 6379
+  db: 0
+  ttl: 3600
+
+logging:
+  level: info
+  format: json
+  outputs:
+    - type: console
+    - type: file
+      path: /var/log/app.log
+      max_size: 100MB
+      max_backups: 10
+    - type: elasticsearch
+      host: elk.example.com:9200
+      index: app-logs
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiry: 24h
+    algorithm: HS256
+  rate_limit:
+    enabled: true
+    requests: 1000
+    window: 1m

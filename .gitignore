@@ -1,0 +1,29 @@
+ # 临时 / 运行时文件
+__pycache__/
+*.pyc
+.DS_Store
+
+# 数据目录（保留目录结构，忽略内容）
+data/rag_storage/**
+!data/rag_storage/.gitkeep
+data/inputs/**
+!data/inputs/.gitkeep
+data/postgres/**
+!data/postgres/.gitkeep
+data/neo4j/**
+data/prompts/**
+!data/prompts/.gitkeep
+!data/neo4j/.gitkeep
+
+# 环境配置（含 API Key，不应提交）
+.env
+
+# 构建产物
+*.egg-info/
+dist/
+*.whl
+
+# 离线部署包
+*.zip
+offline-deploy/
+.DS_Store
