@@ -220,6 +220,24 @@ async def knowledge_search_relations(entity: str, depth: int = 1) -> str:
         return f"[Error] Cannot connect to LightRAG ({LIGHTRAG_BASE}): {e}"
 
 
+
+
+@mcp.tool()
+async def knowledge_ping() -> str:
+    """Simple connectivity test - returns a small response."""
+    logger.info("[TOOL] knowledge_ping")
+    try:
+        # Just test LightRAG connectivity
+        r = await _api_get("/health")
+        status = r.get("status", "unknown")
+        return json.dumps({"pong": True, "lightrag": status}, ensure_ascii=False)
+    except httpx.HTTPStatusError as e:
+        return json.dumps({"pong": False, "error": f"LightRAG HTTP {e.response.status_code}"}, ensure_ascii=False)
+    except httpx.RequestError as e:
+        return json.dumps({"pong": False, "error": f"Cannot connect: {e}"}, ensure_ascii=False)
+
+
+
 def main():
     parser = argparse.ArgumentParser(description="LiteRAG MCP Server")
     parser.add_argument(
